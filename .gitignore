@@ -3,5 +3,8 @@
 data.js
 thumbs/
 build.log
+hashes.json
 __pycache__/
 .DS_Store
+# the invented demo library made by tools/make_demo.py
+demo/
