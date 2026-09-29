@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp Media</title>
+<style>
+:root{ --bg:#f6f5fa; --panel:#fff; --panel2:#f0eef6; --ink:#1b1726; --mute:#6c6680; --rule:#e2dfeb; --brand:#6d4aff; --ok:#16a34a;
+  --voice:#f59e0b; --image:#10b981; --video:#8b5cf6; --document:#3b82f6; --sticker:#ec4899; --other:#64748b; }
+@media (prefers-color-scheme: dark){ :root{ --bg:#0e0d13; --panel:#17151f; --panel2:#201d2b; --ink:#ece9f6; --mute:#9a94ae; --rule:#2b2838; --brand:#8b72ff; } }
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+header{ position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; padding:14px 20px;
+  background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+h1{ margin:0; font-size:18px; }
+.total{ color:var(--mute); }
+.bar{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; flex:1; justify-content:flex-end; }
+input, select{ font:inherit; color:var(--ink); background:var(--panel); border:1px solid var(--rule); border-radius:8px; padding:6px 10px; }
+input[type=search]{ min-width:220px; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; padding:12px 20px 0; }
+.chip{ display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border:1px solid var(--rule); border-radius:16px; background:var(--panel); color:var(--ink); cursor:pointer; font:inherit; }
+.chip i{ width:8px; height:8px; border-radius:50%; }
+.chip small{ color:var(--mute); }
+.chip.on{ border-color:var(--brand); background:color-mix(in srgb, var(--brand) 14%, var(--panel)); font-weight:600; }
+main{ display:grid; grid-template-columns:300px 1fr; gap:20px; padding:16px 20px 60px; }
+@media (max-width: 800px){ main{ grid-template-columns:1fr; } aside{ max-height:260px; } }
+aside{ position:sticky; top:130px; align-self:start; max-height:calc(100vh - 150px); overflow:auto; background:var(--panel); border:1px solid var(--rule); border-radius:12px; padding:10px; }
+aside h2{ font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--mute); margin:4px 6px 8px; }
+.chat{ display:grid; grid-template-columns:1fr auto; gap:2px 8px; width:100%; padding:7px 8px; border:0; border-radius:8px; background:none; color:inherit; font:inherit; text-align:start; cursor:pointer; }
+.chat:hover{ background:var(--panel2); }
+.chat.on{ background:color-mix(in srgb, var(--brand) 14%, transparent); }
+.chat b{ font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chat span{ color:var(--mute); font-variant-numeric:tabular-nums; font-size:12px; }
+.chat em{ grid-column:1 / -1; height:4px; border-radius:2px; background:var(--panel2); overflow:hidden; }
+.chat em s{ display:block; height:100%; background:var(--brand); }
+.summary{ display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; margin-bottom:12px; }
+.summary b{ font-size:20px; }
+.summary span{ color:var(--mute); }
+.grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(170px, 1fr)); gap:12px; }
+.card{ position:relative; display:flex; flex-direction:column; overflow:hidden; background:var(--panel); border:1px solid var(--rule); border-radius:12px; }
+.thumb{ position:relative; display:grid; place-items:center; aspect-ratio:4/3; background:var(--panel2); overflow:hidden; color:#fff; text-decoration:none; }
+.thumb img{ width:100%; height:100%; object-fit:cover; }
+.thumb .ico{ font-size:34px; }
+.thumb .play{ position:absolute; width:38px; height:38px; border-radius:50%; background:rgb(0 0 0 / .55); display:grid; place-items:center; font-size:16px; }
+.tag{ position:absolute; top:8px; inset-inline-start:8px; padding:1px 8px; border-radius:10px; font-size:11px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:.04em; }
+.size{ position:absolute; bottom:8px; inset-inline-end:8px; padding:1px 7px; border-radius:6px; background:rgb(0 0 0 / .7); color:#fff; font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; }
+.meta{ display:flex; flex-direction:column; gap:1px; padding:8px 10px 10px; min-width:0; }
+.meta b{ font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.meta span{ color:var(--mute); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.meta audio{ width:100%; height:28px; margin-top:6px; }
+.copy{ position:absolute; top:6px; inset-inline-end:6px; border:0; border-radius:6px; padding:2px 6px; background:rgb(0 0 0 / .55); color:#fff; font-size:11px; cursor:pointer; opacity:0; }
+.card:hover .copy{ opacity:1; }
+.more{ display:block; margin:18px auto 0; }
+button.ghost{ font:inherit; padding:8px 16px; border:1px solid var(--rule); border-radius:10px; background:var(--panel); color:var(--ink); cursor:pointer; }
+.note{ color:var(--mute); font-size:12px; margin:10px 0 0; }
+.empty{ padding:40px; text-align:center; color:var(--mute); }
+</style>
+</head>
+<body>
+<header>
+  <h1>WhatsApp media</h1>
+  <span class="total" id="total"></span>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Search chats or file names…" aria-label="Search">
+    <select id="size" aria-label="Size">
+      <option value="0">Any size</option><option value="1e6">Over 1 MB</option><option value="1e7">Over 10 MB</option>
+      <option value="5e7">Over 50 MB</option><option value="1e8">Over 100 MB</option>
+    </select>
+    <select id="who" aria-label="Sent or received">
+      <option value="">Sent and received</option><option value="1">Sent by me</option><option value="0">Received</option>
+    </select>
+    <label>From <input type="month" id="from"></label>
+    <label>To <input type="month" id="to"></label>
+    <select id="sort" aria-label="Sort">
+      <option value="size">Largest first</option><option value="new">Newest first</option><option value="old">Oldest first</option>
+    </select>
+  </div>
+</header>
+<div class="chips" id="kinds"></div>
+<main>
+  <aside>
+    <h2>Chats by size</h2>
+    <div id="chats"></div>
+  </aside>
+  <section>
+    <div class="summary" id="summary"></div>
+    <div class="grid" id="grid"></div>
+    <button class="ghost more" id="more" hidden>Show more</button>
+    <p class="note">Everything here is read on this Mac; nothing is uploaded. Clicking a file opens it from WhatsApp's folder — if the browser is not allowed to read it, use "Copy path" and open it in Finder (⌘⇧G). Delete media inside WhatsApp (Settings → Storage and data → Manage storage), not from the folder.</p>
+  </section>
+</main>
+<script src="data.js"></script>
+<script>
+const M = window.MEDIA || [], CH = window.CHATS || [];
+const chatName = Object.fromEntries(CH.map((c) => [c.id, c.name]));
+const KINDS = [
+  ['video', 'Videos', '▶'], ['image', 'Photos', '🖼'], ['voice', 'Voice notes', '🎙'], ['document', 'Documents', '📄'], ['sticker', 'Stickers', '✦'], ['other', 'Other', '•'],
+];
+const state = { kinds: new Set(), chat: '', q: '', min: 0, who: '', from: '', to: '', sort: 'size', shown: 240 };
+const $ = (id) => document.getElementById(id);
+const gb = (b) => (b >= 1e9 ? (b / 1e9).toFixed(2) + ' GB' : b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB');
+const day = (s) => new Date(s * 1000).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+const url = (p) => 'file://' + p.split('/').map(encodeURIComponent).join('/');
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const color = (k) => getComputedStyle(document.documentElement).getPropertyValue('--' + k);
+
+$('total').textContent = `${gb(M.reduce((a, x) => a + x.s, 0))} · ${M.length.toLocaleString()} files · ${CH.length} chats`;
+
+function matches(x, skip) {
+  if (skip !== 'kind' && state.kinds.size && !state.kinds.has(x.k)) return false;
+  if (skip !== 'chat' && state.chat && x.c !== state.chat) return false;
+  if (x.s < state.min) return false;
+  if (state.who !== '' && String(x.m) !== state.who) return false;
+  if (state.from && x.d < Date.parse(state.from + '-01') / 1000) return false;
+  if (state.to) { const [y, m] = state.to.split('-').map(Number); if (x.d >= Date.UTC(y, m, 1) / 1000) return false; }
+  if (state.q) {
+    const hay = ((chatName[x.c] || '') + ' ' + (x.n || '') + ' ' + x.x).toLowerCase();
+    if (!state.q.split(/\s+/).every((w) => hay.includes(w))) return false;
+  }
+  return true;
+}
+
+function render() {
+  // kinds, counted over everything else that is filtered
+  const byKind = {};
+  for (const x of M) if (matches(x, 'kind')) { const k = byKind[x.k] || (byKind[x.k] = { n: 0, s: 0 }); k.n++; k.s += x.s; }
+  $('kinds').innerHTML = `<button class="chip ${state.kinds.size ? '' : 'on'}" data-k="">All</button>` + KINDS.filter(([k]) => byKind[k]).map(([k, label]) =>
+    `<button class="chip ${state.kinds.has(k) ? 'on' : ''}" data-k="${k}"><i style="background:var(--${k})"></i>${label} <small>${byKind[k].n.toLocaleString()} · ${gb(byKind[k].s)}</small></button>`).join('');
+
+  // chats, over everything else
+  const byChat = {};
+  for (const x of M) if (matches(x, 'chat')) { const c = byChat[x.c] || (byChat[x.c] = { n: 0, s: 0 }); c.n++; c.s += x.s; }
+  const list = Object.entries(byChat).sort((a, b) => b[1].s - a[1].s);
+  const top = list[0]?.[1].s || 1;
+  $('chats').innerHTML = `<button class="chat ${state.chat ? '' : 'on'}" data-c=""><b>All chats</b><span>${list.length}</span></button>` + list.map(([id, c]) =>
+    `<button class="chat ${state.chat === id ? 'on' : ''}" data-c="${esc(id)}" title="${esc(id)}"><b dir="auto">${esc(chatName[id] || id)}</b><span>${gb(c.s)}</span><em><s style="width:${Math.max(1, (c.s / top) * 100)}%"></s></em></button>`).join('');
+
+  const rows = M.filter((x) => matches(x));
+  rows.sort(state.sort === 'size' ? (a, b) => b.s - a.s : state.sort === 'new' ? (a, b) => b.d - a.d : (a, b) => a.d - b.d);
+  const total = rows.reduce((a, x) => a + x.s, 0);
+  $('summary').innerHTML = `<b>${gb(total)}</b><span>${rows.length.toLocaleString()} files${state.chat ? ' in ' + esc(chatName[state.chat] || state.chat) : ''}</span>`;
+  const show = rows.slice(0, state.shown);
+  $('grid').innerHTML = show.length ? show.map(card).join('') : '<div class="empty">Nothing matches these filters.</div>';
+  $('more').hidden = rows.length <= state.shown;
+  $('more').textContent = `Show more (${(rows.length - state.shown).toLocaleString()} left)`;
+}
+
+function card(x) {
+  const kind = KINDS.find(([k]) => k === x.k) || KINDS[5];
+  const media = x.t
+    ? `<img loading="lazy" src="${esc(x.t)}" alt="">${x.k === 'video' ? '<span class="play">▶</span>' : ''}`
+    : `<span class="ico">${kind[2]}</span>`;
+  return `<div class="card">
+    <a class="thumb" href="${url(x.p)}" target="_blank" style="${x.t ? '' : 'background:color-mix(in srgb, var(--' + x.k + ') 22%, var(--panel2));color:var(--' + x.k + ')'}">
+      ${media}<span class="tag" style="background:var(--${x.k})">${x.x}</span><span class="size">${gb(x.s)}</span></a>
+    <button class="copy" data-p="${esc(x.p)}">Copy path</button>
+    <div class="meta">
+      <b dir="auto">${esc(chatName[x.c] || x.c)}</b>
+      <span>${day(x.d)} · ${x.m ? 'sent' : 'received'}${x.n ? ' · ' + esc(x.n) : ''}</span>
+      ${x.k === 'voice' ? `<audio controls preload="none" src="${url(x.p)}"></audio>` : ''}
+    </div></div>`;
+}
+
+$('kinds').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-k]'); if (!b) return;
+  const k = b.dataset.k;
+  if (!k) state.kinds.clear(); else if (state.kinds.has(k)) state.kinds.delete(k); else state.kinds.add(k);
+  state.shown = 240; render();
+});
+$('chats').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (!b) return; state.chat = b.dataset.c; state.shown = 240; render(); });
+$('grid').addEventListener('click', (e) => {
+  const b = e.target.closest('.copy'); if (!b) return;
+  navigator.clipboard.writeText(b.dataset.p).then(() => { b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy path'), 1200); });
+});
+let tq;
+$('q').addEventListener('input', (e) => { clearTimeout(tq); tq = setTimeout(() => { state.q = e.target.value.trim().toLowerCase(); state.shown = 240; render(); }, 150); });
+$('size').addEventListener('change', (e) => { state.min = Number(e.target.value); state.shown = 240; render(); });
+$('who').addEventListener('change', (e) => { state.who = e.target.value; state.shown = 240; render(); });
+$('from').addEventListener('change', (e) => { state.from = e.target.value; state.shown = 240; render(); });
+$('to').addEventListener('change', (e) => { state.to = e.target.value; state.shown = 240; render(); });
+$('sort').addEventListener('change', (e) => { state.sort = e.target.value; render(); });
+$('more').addEventListener('click', () => { state.shown += 480; render(); });
+render();
+</script>
+</body>
+</html>

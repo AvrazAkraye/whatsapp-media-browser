@@ -1,0 +1,7 @@
+# What build.py makes from your own WhatsApp data. It holds your chat names, file names and
+# picture previews: keep it on your machine, never commit it.
+data.js
+thumbs/
+build.log
+__pycache__/
+.DS_Store
